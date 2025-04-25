@@ -3,7 +3,7 @@ package parser
 type HTTPMethod int
 
 const (
-	GET HTTPMethod = 0
+	GET HTTPMethod = iota
 	POST
 )
 
@@ -28,4 +28,15 @@ func NewRequest(buf []byte) (*Request, error) {
 		return nil, err
 	}
 	return &r, nil
+}
+
+func (r *Request) GetMethod() string {
+	switch r.Method {
+	case GET:
+		return "GET"
+	case POST:
+		return "POST"
+	default:
+		return "UNRECOGNIZED_HTTP_VERB"
+	}
 }

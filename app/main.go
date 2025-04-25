@@ -20,11 +20,11 @@ func main() {
 		fmt.Println("Error accepting connection: ", err.Error())
 		os.Exit(1)
 	}
-	defer conn.Close()
 
 	r := parser.NewResponse()
-	r.WriteHeader()
-	r.WriteOk()
-	r.WriteCRLF()
-	conn.Write(r.GetBuffer())
+	b := r.GetBuffer()
+	_, err = conn.Write(b)
+	if err != nil {
+		fmt.Printf("Failed to send message to the connection: %s\n", b)
+	}
 }

@@ -8,9 +8,9 @@ type Response struct {
 	buffer []byte
 }
 
-func NewResponse() *Response {
+func NewResponse(status int) *Response {
 	return &Response{
-		statusCode: 200,
+		statusCode: status,
 		headers:    make(map[string]string),
 		buffer:     make([]byte, 0),
 	}
@@ -22,4 +22,8 @@ func (r *Response) GetBuffer() []byte {
 	r.writeBody()
 
 	return r.buffer
+}
+
+func (r *Response) SetHeader(header, value string) {
+	r.headers[header] = value
 }

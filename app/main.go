@@ -21,10 +21,27 @@ func main() {
 		os.Exit(1)
 	}
 
-	r := parser.NewResponse()
-	b := r.GetBuffer()
-	_, err = conn.Write(b)
+	buf := make([]byte, 1024)
+	conn.Read(buf)
+	r, err := parser.NewRequest(buf)
 	if err != nil {
-		fmt.Printf("Failed to send message to the connection: %s\n", b)
+		fmt.Printf("There was an error in parsing the request buffer ('%s'): %s ", buf, err)
+		return
+	}
+
+	if r.Target == "/" {
+		resp := parser.NewResponse(200)
+		b := resp.GetBuffer()
+		_, err = conn.Write(b)
+		if err != nil {
+			fmt.Printf("Failed to send message to the connection: %s\n", b)
+		}
+	} else {
+		resp := parser.NewResponse(404)
+		b := resp.GetBuffer()
+		_, err = conn.Write(b)
+		if err != nil {
+			fmt.Printf("Failed to send message to the connection: %s\n", b)
+		}
 	}
 }

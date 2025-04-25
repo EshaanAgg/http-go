@@ -1,0 +1,31 @@
+package parser
+
+type HTTPMethod int
+
+const (
+	GET HTTPMethod = 0
+	POST
+)
+
+type Request struct {
+	Method  HTTPMethod
+	Target  string
+	Version float64
+	Headers map[string]string
+
+	buf []byte
+	idx int
+}
+
+func NewRequest(buf []byte) (*Request, error) {
+	r := Request{
+		buf: buf,
+		idx: 0,
+	}
+
+	err := r.parseRequestLine()
+	if err != nil {
+		return nil, err
+	}
+	return &r, nil
+}

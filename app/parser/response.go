@@ -3,6 +3,7 @@ package parser
 type Response struct {
 	statusCode int
 	headers    map[string]string
+	body       string
 
 	// Stores the bytes of the response that have been added by the appropiate writers
 	buffer []byte
@@ -26,4 +27,8 @@ func (r *Response) GetBuffer() []byte {
 
 func (r *Response) SetHeader(header, value string) {
 	r.headers[header] = value
+}
+
+func (r *Response) SetBody(body string) {
+	r.body = body
 }

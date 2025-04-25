@@ -35,4 +35,8 @@ func (r *Response) writeHeaders() {
 	r.writeCRLF() // Marks the end of headers
 }
 
-func (r *Response) writeBody() {}
+func (r *Response) writeBody() {
+	if r.body != "" {
+		r.buffer = append(r.buffer, []byte(r.body)...)
+	}
+}

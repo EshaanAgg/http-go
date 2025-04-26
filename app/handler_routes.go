@@ -2,7 +2,7 @@ package main
 
 import "github.com/codecrafters-io/http-server-starter-go/app/parser"
 
-func (s *Server) handleDefault(*parser.Request) *parser.Response {
+func (s *Server) handleDefault(req *parser.Request) *parser.Response {
 	return parser.NewResponse(200)
 }
 

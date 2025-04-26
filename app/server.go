@@ -29,6 +29,7 @@ func (s *Server) Start() {
 		if err != nil {
 			log.Printf("Error accepting connection: %v\n", err.Error())
 		}
+		log.Printf("Accepted the connection to %s\n", conn.LocalAddr().String())
 		go s.handleConnection(conn)
 	}
 }

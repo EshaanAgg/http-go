@@ -107,11 +107,13 @@ func (r *Request) parseHeaders() error {
 // Parses the HTTP method of the request, and sets the Method field of the request.
 func (r *Request) parseHTTPMethod() error {
 	m := r.parseNextWord()
-	if m == "GET" {
+
+	switch m {
+	case "GET":
 		r.Method = GET
-	} else if m == "POST" {
+	case "POST":
 		r.Method = POST
-	} else {
+	default:
 		return fmt.Errorf("invalid HTTP method found for the request: %s", m)
 	}
 

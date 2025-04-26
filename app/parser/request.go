@@ -49,7 +49,7 @@ func (r *Request) GetBody() []byte {
 }
 
 func (r *Request) GetEncoding() SupportedEncodingType {
-	encodings, ok := r.Headers["Content-Encoding"]
+	encodings, ok := r.Headers["Accept-Encoding"]
 	if !ok {
 		return NoEncoding
 	}

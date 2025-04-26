@@ -14,7 +14,7 @@ var statusMap = map[int]string{
 }
 
 func (r *Response) writeCRLF() {
-	r.buffer = append(r.buffer, "\r\n"...)
+	r.buffer.Write([]byte("\r\n"))
 }
 
 func (r *Response) writeStatusLine() {
@@ -24,14 +24,14 @@ func (r *Response) writeStatusLine() {
 	}
 
 	statusLine := fmt.Sprintf("HTTP/1.1 %d %s", r.statusCode, status)
-	r.buffer = append(r.buffer, statusLine...)
+	r.buffer.Write([]byte(statusLine))
 	r.writeCRLF()
 }
 
 func (r *Response) writeHeaders() {
 	for key, value := range r.headers {
 		headerLine := fmt.Sprintf("%s: %s", key, value)
-		r.buffer = append(r.buffer, headerLine...)
+		r.buffer.Write([]byte(headerLine))
 		r.writeCRLF() // Marks the end of the particular header
 	}
 
@@ -39,7 +39,7 @@ func (r *Response) writeHeaders() {
 }
 
 func (r *Response) writeBody() {
-	if r.body != "" {
-		r.buffer = append(r.buffer, []byte(r.body)...)
+	if len(r.body) != 0 {
+		r.buffer.Write(r.body)
 	}
 }

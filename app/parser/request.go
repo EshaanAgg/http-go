@@ -14,9 +14,12 @@ type Request struct {
 	Target  string
 	Headers map[string]string
 
-	buf  []byte
-	idx  int
+	// Bytes in the body of the request. It is set
+	// after the parsing of the request is done.
 	body []byte
+
+	buf []byte // Bytes of the request
+	idx int
 }
 
 func NewRequest(buf []byte) (*Request, error) {

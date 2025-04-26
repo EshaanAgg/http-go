@@ -50,6 +50,7 @@ func (r *Request) parse() error {
 		return err
 	}
 
+	// Read the body of the request using the content length header
 	if contentLength, ok := r.Headers["Content-Length"]; ok {
 		r.parseBody(contentLength)
 	}

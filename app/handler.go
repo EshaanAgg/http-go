@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"log"
 	"net"
 	"strings"
@@ -9,17 +10,24 @@ import (
 )
 
 func (s *Server) handleConnection(conn net.Conn) {
+	defer conn.Close()
+
 	for {
 		buf := make([]byte, 1024)
 		_, err := conn.Read(buf)
 		if err != nil {
-			log.Printf("error reading message from the connection %s: %s\n", conn.LocalAddr(), err)
+			if err == io.EOF {
+				log.Printf("[%s] Connection closed by the client\n", conn.RemoteAddr().String())
+				return
+			}
+
+			log.Printf("[%s] Error reading message: %s\n", conn.LocalAddr(), err)
 			return
 		}
 
 		r, err := parser.NewRequest(buf)
 		if err != nil {
-			log.Printf("error in parsing the request buffer ('%s'): %s ", buf, err)
+			log.Printf("Error in parsing the request buffer ('%s'): %s ", buf, err)
 			return
 		}
 
@@ -34,9 +42,9 @@ func (s *Server) handleConnection(conn net.Conn) {
 		}
 
 		b := resp.GetBuffer()
-		_, err = conn.Write(b)
+		_, err = conn.Write(b.Bytes())
 		if err != nil {
-			log.Printf("Failed to send message (%s) to the connection: %s\n", b, err)
+			log.Printf("[%s] Failed to send message (%s) : %v\n", conn.RemoteAddr().String(), b.Bytes(), err)
 		}
 
 		if shouldClose {

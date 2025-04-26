@@ -2,22 +2,20 @@ package parser
 
 import (
 	"fmt"
-	"slices"
 	"strconv"
+	"strings"
 )
 
 // Parses the request buffer until ine of the specified delimiters is found.
-func (r *Request) parseUntil(del ...byte) string {
+func (r *Request) parseUntil(cutset string) string {
 	w := make([]byte, 0)
 
-	ch := r.buf[r.idx]
-	for !slices.Contains(del, ch) {
-		w = append(w, ch)
+	for !strings.Contains(cutset, string(r.buf[r.idx])) {
+		w = append(w, r.buf[r.idx])
 		r.idx++
 		if r.idx >= len(r.buf) {
 			return string(w)
 		}
-		ch = r.buf[r.idx]
 	}
 
 	r.idx++ // Skip the delimiter
@@ -27,7 +25,7 @@ func (r *Request) parseUntil(del ...byte) string {
 // Parses the request buffer to extract the next word.
 // The parsing is stopped when either a space of a CRLF is encountered.
 func (r *Request) parseNextWord() string {
-	s := r.parseUntil(' ', '\r')
+	s := r.parseUntil(" \r")
 
 	// Skip the end of CRLF if present
 	if r.idx < len(r.buf) && r.buf[r.idx] == '\n' {
@@ -90,15 +88,15 @@ func (r *Request) parseHTTPVersion() error {
 // The parsing is stopped when a CRLF is encountered.
 func (r *Request) parseHeaders() error {
 	for r.buf[r.idx] != '\r' {
-		key := r.parseUntil(':')
+		key := r.parseUntil(":")
 		if key == "" {
 			return fmt.Errorf("invalid header key found for the request: %s", key)
 		}
-		value := r.parseUntil('\r')
+		value := r.parseUntil("\r")
 		if value == "" {
 			return fmt.Errorf("invalid header value found for the request: %s", value)
 		}
-		r.Headers[key] = value
+		r.Headers[key] = strings.TrimLeft(value, " ")
 		r.idx++ // Skip the end of CRLF
 	}
 

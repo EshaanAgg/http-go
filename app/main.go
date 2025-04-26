@@ -6,8 +6,8 @@ func main() {
 	var port int
 	var filesBaseDir string = ""
 
-	flag.IntVar(&port, "--port", 4221, "Port to listen on")
-	flag.StringVar(&filesBaseDir, "--directory", "", "Base directory for files")
+	flag.IntVar(&port, "port", 4221, "Port to listen on")
+	flag.StringVar(&filesBaseDir, "directory", "", "Base directory for files")
 
 	s := NewServer(port, filesBaseDir)
 	s.Start()

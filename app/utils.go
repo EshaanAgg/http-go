@@ -8,6 +8,7 @@ import (
 
 func (s *Server) getFileContent(fileName string) ([]byte, error) {
 	// Open the file
+	fmt.Printf("Opening file: %s/%s\n", s.FilesBaseDir, fileName)
 	file, err := os.Open(fmt.Sprintf("%s/%s", s.FilesBaseDir, fileName))
 	if err != nil {
 		return nil, err

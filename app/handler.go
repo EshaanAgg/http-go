@@ -23,14 +23,14 @@ func (s *Server) handleConnection(conn net.Conn) {
 			return
 		}
 
-		log.Printf("[REQUEST] %s | %s | %s", conn.LocalAddr().String(), r.GetMethod(), r.Target)
+		log.Printf("[%s] %s request to %s", conn.RemoteAddr().String(), r.GetMethod(), r.Target)
 
 		resp := s.getResponse(r)
 
 		// If the request is a close request, add the Connection: close header to the same
 		shouldClose := s.isCloseRequest(r)
 		if shouldClose {
-			r.Headers["Connection"] = "close"
+			resp.SetHeader("Connection", "close")
 		}
 
 		b := resp.GetBuffer()
@@ -40,7 +40,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 		}
 
 		if shouldClose {
-			log.Printf("Recieved a close request, terminating the connection %s", conn.LocalAddr().String())
+			log.Printf("[%s] Recieved a close request, terminating the connection", conn.RemoteAddr().String())
 			conn.Close()
 			return
 		}

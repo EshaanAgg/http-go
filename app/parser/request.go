@@ -1,5 +1,7 @@
 package parser
 
+import "strings"
+
 type HTTPMethod int
 
 const (
@@ -44,4 +46,25 @@ func (r *Request) GetMethod() string {
 
 func (r *Request) GetBody() []byte {
 	return r.body
+}
+
+func (r *Request) GetEncoding() SupportedEncodingType {
+	encodings, ok := r.Headers["Content-Encoding"]
+	if !ok {
+		return NoEncoding
+	}
+
+	supportedEncodings := strings.SplitSeq(encodings, ",")
+	for encoding := range supportedEncodings {
+		switch strings.TrimSpace(encoding) {
+		// Arrange the supported encodings in the order of preference
+		case "gzip":
+			return Gzip
+		case "identity":
+			return NoEncoding
+		}
+	}
+
+	// Default to no encoding if none of the supported encodings are found
+	return NoEncoding
 }

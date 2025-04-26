@@ -12,7 +12,7 @@ func (s *Server) handleNotFound(*parser.Request) *parser.Response {
 
 func (s *Server) handleEcho(req *parser.Request) *parser.Response {
 	txt := req.Target[len("/echo/"):]
-	return parser.NewPlainTextResponse(200, txt)
+	return parser.NewPlainTextResponse(200, txt, req.GetEncoding())
 }
 
 func (s *Server) handleUserAgent(req *parser.Request) *parser.Response {
@@ -20,5 +20,5 @@ func (s *Server) handleUserAgent(req *parser.Request) *parser.Response {
 	if !ok {
 		user_agent = "Unknown"
 	}
-	return parser.NewPlainTextResponse(200, user_agent)
+	return parser.NewPlainTextResponse(200, user_agent, req.GetEncoding())
 }

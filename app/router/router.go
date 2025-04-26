@@ -6,22 +6,23 @@ import (
 	"github.com/codecrafters-io/http-server-starter-go/app/parser"
 )
 
-type Route interface {
-	Handle(r *parser.Request) *parser.Response
-}
-
-func GetRoute(r *parser.Request) Route {
+func GetResponse(r *parser.Request) *parser.Response {
 	// Route -> /
 	if r.Target == "/" {
-		return defaultRoute{}
+		return handleDefaultRoute(r)
 	}
 
 	// Route -> /echo/*
 	if strings.HasPrefix(r.Target, "/echo/") {
 		txt := r.Target[6:]
-		return newEchoRoute(txt)
+		return handleEchoRoute(r, txt)
+	}
+
+	// Route -> /user-agent
+	if r.Target == "/user-agent" {
+		return handleUserAgentRoute(r)
 	}
 
 	// Default route
-	return notFoundRoute{}
+	return handleNotFoundRoute(r)
 }

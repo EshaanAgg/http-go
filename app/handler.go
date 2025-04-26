@@ -25,9 +25,8 @@ func handleConnection(conn net.Conn) {
 	}
 
 	log.Printf("[INFO] %s request to '%s'", r.GetMethod(), r.Target)
-	hdlr := router.GetRoute(r)
 
-	resp := hdlr.Handle(r)
+	resp := router.GetResponse(r)
 	b := resp.GetBuffer()
 	_, err = conn.Write(b)
 	if err != nil {

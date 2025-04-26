@@ -1,5 +1,7 @@
 package parser
 
+import "fmt"
+
 type Response struct {
 	statusCode int
 	headers    map[string]string
@@ -9,12 +11,25 @@ type Response struct {
 	buffer []byte
 }
 
+// Creates a new response with the provided status code.
 func NewResponse(status int) *Response {
 	return &Response{
 		statusCode: status,
 		headers:    make(map[string]string),
 		buffer:     make([]byte, 0),
 	}
+}
+
+// Creates a new response with the provided status code and body.
+// The body is set to the provided string and the content type is set to text/plain.
+func NewPlainTextResponse(statusCode int, body string) *Response {
+	r := NewResponse(statusCode)
+
+	r.SetHeader("Content-Type", "text/plain")
+	r.SetHeader("Content-Length", fmt.Sprintf("%d", len(body)))
+	r.SetBody(body)
+
+	return r
 }
 
 func (r *Response) GetBuffer() []byte {

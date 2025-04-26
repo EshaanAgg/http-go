@@ -10,7 +10,6 @@ const (
 type Request struct {
 	Method  HTTPMethod
 	Target  string
-	Version float64
 	Headers map[string]string
 
 	buf []byte
@@ -19,11 +18,12 @@ type Request struct {
 
 func NewRequest(buf []byte) (*Request, error) {
 	r := Request{
-		buf: buf,
-		idx: 0,
+		buf:     buf,
+		idx:     0,
+		Headers: make(map[string]string),
 	}
 
-	err := r.parseRequestLine()
+	err := r.parse()
 	if err != nil {
 		return nil, err
 	}

@@ -32,6 +32,16 @@ func NewPlainTextResponse(statusCode int, body string) *Response {
 	return r
 }
 
+func NewOctetStreamResponse(statusCode int, body []byte) *Response {
+	r := NewResponse(statusCode)
+
+	r.SetHeader("Content-Type", "application/octet-stream")
+	r.SetHeader("Content-Length", fmt.Sprintf("%d", len(body)))
+	r.SetBody(string(body))
+
+	return r
+}
+
 func (r *Response) GetBuffer() []byte {
 	r.writeStatusLine()
 	r.writeHeaders()

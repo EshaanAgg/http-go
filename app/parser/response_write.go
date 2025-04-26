@@ -8,6 +8,7 @@ import (
 var statusMap = map[int]string{
 	200: "OK",
 	404: "Not Found",
+	405: "Method Not Allowed",
 }
 
 func (r *Response) writeCRLF() {

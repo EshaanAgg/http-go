@@ -1,20 +1,21 @@
-package router
+package main
 
 import "github.com/codecrafters-io/http-server-starter-go/app/parser"
 
-func handleDefaultRoute(req *parser.Request) *parser.Response {
+func (s *Server) handleDefault(*parser.Request) *parser.Response {
 	return parser.NewResponse(200)
 }
 
-func handleNotFoundRoute(req *parser.Request) *parser.Response {
+func (s *Server) handleNotFound(*parser.Request) *parser.Response {
 	return parser.NewResponse(404)
 }
 
-func handleEchoRoute(req *parser.Request, txt string) *parser.Response {
+func (s *Server) handleEcho(req *parser.Request) *parser.Response {
+	txt := req.Target[len("/echo/"):]
 	return parser.NewPlainTextResponse(200, txt)
 }
 
-func handleUserAgentRoute(req *parser.Request) *parser.Response {
+func (s *Server) handleUserAgent(req *parser.Request) *parser.Response {
 	user_agent, ok := req.Headers["User-Agent"]
 	if !ok {
 		user_agent = "Unknown"

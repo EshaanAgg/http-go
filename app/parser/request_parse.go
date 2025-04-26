@@ -3,6 +3,7 @@ package parser
 import (
 	"fmt"
 	"slices"
+	"strconv"
 )
 
 // Parses the request buffer until ine of the specified delimiters is found.
@@ -49,6 +50,10 @@ func (r *Request) parse() error {
 	err = r.parseHeaders()
 	if err != nil {
 		return err
+	}
+
+	if contentLength, ok := r.Headers["Content-Length"]; ok {
+		r.parseBody(contentLength)
 	}
 
 	return nil
@@ -113,4 +118,16 @@ func (r *Request) parseHTTPMethod() error {
 	}
 
 	return nil
+}
+
+// Parses the body of the request.
+func (r *Request) parseBody(contentLength string) {
+	cl, err := strconv.Atoi(contentLength)
+	if err != nil {
+		fmt.Printf("error in parsing the content length: %s", err)
+		return
+	}
+
+	r.body = r.buf[r.idx : r.idx+cl]
+	r.idx += cl
 }

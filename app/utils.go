@@ -22,3 +22,20 @@ func (s *Server) getFileContent(fileName string) ([]byte, error) {
 
 	return content, nil
 }
+
+func (s *Server) saveFileContent(fileName string, content []byte) error {
+	// Create the file
+	file, err := os.Create(fmt.Sprintf("%s/%s", s.FilesBaseDir, fileName))
+	if err != nil {
+		return fmt.Errorf("failed to create file: %w", err)
+	}
+	defer file.Close()
+
+	// Write the content to the file
+	_, err = file.Write(content)
+	if err != nil {
+		return fmt.Errorf("failed to write to file: %w", err)
+	}
+
+	return nil
+}

@@ -12,8 +12,9 @@ type Request struct {
 	Target  string
 	Headers map[string]string
 
-	buf []byte
-	idx int
+	buf  []byte
+	idx  int
+	body []byte
 }
 
 func NewRequest(buf []byte) (*Request, error) {
@@ -39,4 +40,8 @@ func (r *Request) GetMethod() string {
 	default:
 		return "UNRECOGNIZED_HTTP_VERB"
 	}
+}
+
+func (r *Request) GetBody() []byte {
+	return r.body
 }
